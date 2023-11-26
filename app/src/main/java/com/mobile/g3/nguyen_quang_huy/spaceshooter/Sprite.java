@@ -42,8 +42,6 @@ public class Sprite {
             }
         }
         cnt_step++;
-        Log.d("hahaha", "step: " + cnt_step);
-        Log.d("hahaha", "frame: " + cnt_frame);
         canvas.drawBitmap(this.frames.get(cnt_frame), (float) (obj.getPositionX()-width/2), (float) (obj.getPositionY()-height/2), null);
         if(cnt_step >= NUMBER_UPDATE_FOR_NEXT_FRAME) {
             cnt_frame ++;

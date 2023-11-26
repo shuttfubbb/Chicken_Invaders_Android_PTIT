@@ -2,6 +2,7 @@ package com.mobile.g3.nguyen_quang_huy.spaceshooter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,6 +15,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -96,6 +98,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+        if(gameLoop.getState().equals(Thread.State.TERMINATED)){
+            gameLoop = new GameLoop(this, surfaceHolder);
+        }
         gameLoop.startLoop();
     }
     @Override
@@ -162,6 +167,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+        if(player.getHealth() <= 0){
+            Intent intent = new Intent(getContext(), EndGameActivity.class);
+            intent.putExtra("score", player.getScore());
+            getContext().startActivity(intent);
+            ((Activity) getContext()).finish();
+            return;
+        }
         // Update game state
         joystick.update();
         player.update();

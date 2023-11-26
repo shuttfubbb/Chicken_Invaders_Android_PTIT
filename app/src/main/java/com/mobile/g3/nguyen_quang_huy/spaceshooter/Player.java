@@ -9,10 +9,11 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player extends Circle{
+public class Player extends Circle implements Serializable{
     public static final double SPEED_PIXELS_PER_SECOND = 1000;
     public static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private final Joystick joystick;
