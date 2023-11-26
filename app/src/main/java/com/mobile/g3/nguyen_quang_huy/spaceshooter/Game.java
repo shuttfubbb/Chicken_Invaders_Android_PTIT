@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,20 +28,24 @@ import java.util.List;
 * Game manages all object in the game and is reponsible for updating all states and render all objects to the screen
 * */
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
+    Member member;
+    History history;
     static int screenWidth, screenHeight;
     private final Player player;
     private final Joystick joystick;
     private final int MAX_HEALTH = 3;
     private final Bitmap heartImage0 = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.heart0);
     private final Bitmap heartImage1 = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.heart1);
+    private final Bitmap background = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.background);
     private GameLoop gameLoop;
     private List<Enemy> enemyList = new ArrayList<Enemy>();
     private List<Spell> spellList = new ArrayList<Spell>();
+    private List<Bullet> bulletList = new ArrayList<Bullet>();
     private List<Explosion> explosionList = new ArrayList<Explosion>();
     private int joystickPointerId = 0;
     private int numberOfSpellToCast = 0;
 
-    public Game(Context context) {
+    public Game(Context context, Member member) {
         super(context);
 
         // Get surface holder and add callback
@@ -48,6 +55,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
 
         // Init Game Objects
+        this.member = member;
+        this.history = new History();
         joystick = new Joystick(400, 800, 160, 90);
         player = new Player(getContext(), joystick, 500, 500, 30);
         setFocusable(true);
@@ -134,6 +143,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         paint.setTextSize(50);
         canvas.drawText("Score: " + player.getScore(), 60, 60, paint);
     }
+    public void drawBackground(Canvas canvas){
+        canvas.drawBitmap(background, 0, 0, null);
+    }
     public void drawHeath(Canvas canvas){
         int margin = 30;
         for(int i=1; i<=MAX_HEALTH; ++i){
@@ -150,6 +162,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
 //        drawUPS(canvas);
 //        drawFPS(canvas);
+        drawBackground(canvas);
         drawScore(canvas);
         drawHeath(canvas);
         for(Explosion explosion : explosionList){
@@ -160,8 +173,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             enemy.draw(canvas);
         }
         player.draw(canvas);
-        for(Spell spell : spellList){
-            spell.draw(canvas);
+        for(Bullet bullet : bulletList){
+            bullet.draw(canvas);
         }
         joystick.draw(canvas);
     }
@@ -169,7 +182,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         if(player.getHealth() <= 0){
             Intent intent = new Intent(getContext(), EndGameActivity.class);
-            intent.putExtra("score", player.getScore());
+            history.setScore(player.getScore());
+            history.setMember(this.member);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                history.setDatetime(LocalDateTime.now());
+            }
+            intent.putExtra("history", history);
+            intent.putExtra("member", member);
             getContext().startActivity(intent);
             ((Activity) getContext()).finish();
             return;
@@ -183,17 +202,27 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
         // Cap nhat trang thai cho moi enemy
         for(Enemy enemy : enemyList){
+
+            if(enemy.getPositionX() >= screenWidth - enemy.getRadius() - 20){
+                double vX = enemy.getVerlocityX();
+                enemy.setVerlocityX(vX * -1);
+            }
+            if(enemy.getPositionX() <= enemy.getRadius() + 20){
+                double vX = enemy.getVerlocityX();
+                enemy.setVerlocityX(vX * -1);
+            }
             enemy.update();
         }
         // Cap nhat trang thai cho moi spell
         while(numberOfSpellToCast > 0){
-            spellList.add(new Spell(getContext(), player.getPositionX(), player.getPositionY(), 40, 30));
-            spellList.add(new Spell(getContext(), player.getPositionX(), player.getPositionY(), 40, 0));
-            spellList.add(new Spell(getContext(), player.getPositionX(), player.getPositionY(), 40, -30));
+            bulletList.add(new Bullet(getContext(), player));
+//            spellList.add(new Spell(getContext(), player.getPositionX(), player.getPositionY(), 40, 30));
+//            spellList.add(new Spell(getContext(), player.getPositionX(), player.getPositionY(), 40, 0));
+//            spellList.add(new Spell(getContext(), player.getPositionX(), player.getPositionY(), 40, -30));
             numberOfSpellToCast--;
         }
-        for(Spell spell : spellList){
-            spell.update();
+        for(Bullet bullet : bulletList){
+            bullet.update();
         }
         // Kiem tra va cham tung enemy voi Player
         for(int i=0; i<enemyList.size(); ++i){
@@ -204,12 +233,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 continue;
             }
             // Kiem tra enemy do co va cham voi Dan khong
-            for(int j=0; j<spellList.size(); ++j){
-                if(Circle.isColliding(enemyList.get(i), spellList.get(j))){
+            for(int j=0; j<bulletList.size(); ++j){
+                if(Circle.isColliding(enemyList.get(i), bulletList.get(j))){
                     player.setScore(player.getScore() + 1);
                     explosionList.add(new Explosion(getContext(), enemyList.get(i).getPositionX(), enemyList.get(i).getPositionY()));
                     enemyList.remove(i);
-                    spellList.remove(j);
+                    bulletList.remove(j);
                     break;
                 }
             }

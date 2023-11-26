@@ -18,10 +18,10 @@ public abstract class GameObject {
     public abstract void draw(Canvas canvas);
 
     public abstract void update();
-    protected double getPositionX(){
+    public double getPositionX(){
         return positionX;
     }
-    protected double getPositionY(){
+    public double getPositionY(){
         return positionY;
     }
     public double getDirectionX() {
@@ -29,6 +29,14 @@ public abstract class GameObject {
     }
     public double getDirectionY() {
         return directionY;
+    }
+
+    public double getVerlocityX() {
+        return verlocityX;
+    }
+
+    public void setVerlocityX(double verlocityX) {
+        this.verlocityX = verlocityX;
     }
 
     public void setPositionX(double positionX) {

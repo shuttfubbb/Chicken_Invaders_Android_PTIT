@@ -2,9 +2,10 @@ package com.mobile.g3.nguyen_quang_huy.spaceshooter;
 
 import android.os.Build;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class History {
+public class History implements Serializable {
     private Integer id;
     private LocalDateTime datetime;
     private Integer score;

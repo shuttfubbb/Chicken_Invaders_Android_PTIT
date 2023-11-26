@@ -6,24 +6,39 @@
     android:layout_height="match_parent"
     tools:context=".EndGameActivity">
 
-    <TextView
-        android:id="@+id/txtScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="114dp"
-        android:text="TextView"
-        android:textSize="30sp"
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/background"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:layout_marginEnd="15dp"
-        android:text="Back"
-        app:layout_constraintEnd_toEndOf="@+id/txtScore"
-        app:layout_constraintTop_toBottomOf="@+id/txtScore" />
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="352dp"
+            android:layout_marginBottom="85dp"
+            android:text="Back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txtScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="318dp"
+            android:layout_marginTop="153dp"
+            android:text="TextView"
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

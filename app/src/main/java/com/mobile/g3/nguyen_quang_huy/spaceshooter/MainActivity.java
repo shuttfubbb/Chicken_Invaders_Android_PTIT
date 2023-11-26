@@ -2,6 +2,7 @@ package com.mobile.g3.nguyen_quang_huy.spaceshooter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
@@ -9,6 +10,7 @@ import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
     private Game game;
+    Member member;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,7 +18,12 @@ public class MainActivity extends AppCompatActivity {
         // Set window to fullscreen
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        game = new Game(this);
+        Intent intent = getIntent();
+        member = new Member();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            member = (Member) intent.getSerializableExtra("member", Member.class);
+        }
+        game = new Game(this, member);
         setContentView(game);
     }
     @Override

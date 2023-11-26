@@ -1,8 +1,9 @@
 package com.mobile.g3.nguyen_quang_huy.spaceshooter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Member {
+public class Member implements Serializable {
     private Integer id;
     private String name;
     private String username;

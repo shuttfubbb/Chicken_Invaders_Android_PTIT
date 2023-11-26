@@ -10,39 +10,30 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class EndGameActivity extends AppCompatActivity {
-    TextView txtScore;
-    Button btnBack;
-    History history;
+public class MemberHomeActivity extends AppCompatActivity {
     Member member;
-    HistoryDBH historyDBH;
-
+    Button btnNewGame;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_end_game);
+        setContentView(R.layout.activity_member_home);
         Window window = getWindow();
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        txtScore = (TextView) findViewById(R.id.txtScore);
-        btnBack = (Button) findViewById(R.id.btnBack);
-        history = new History();
-        historyDBH = new HistoryDBH(EndGameActivity.this);
-        member = new Member();
         Intent intent = getIntent();
+        member = new Member();
+        btnNewGame = (Button) findViewById(R.id.btnNewGame);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             member = (Member) intent.getSerializableExtra("member", Member.class);
-            history = (History) intent.getSerializableExtra("history", History.class);
         }
-        txtScore.setText("Your score: " + history.getScore());
+        TextView wc = (TextView) findViewById(R.id.txtWelcome);
+        wc.setText("Welcome " + member.getName());
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        btnNewGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(historyDBH.add(history)){
-                    Intent intent = new Intent(EndGameActivity.this, MemberHomeActivity.class);
-                    intent.putExtra("member", member);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(MemberHomeActivity.this, MainActivity.class);
+                intent.putExtra("member", member);
+                startActivity(intent);
             }
         });
     }
