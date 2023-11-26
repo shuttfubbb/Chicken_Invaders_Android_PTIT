@@ -232,4 +232,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             player.setPositionY(player.getRadius());
         }
     }
+    public void pause() {
+        gameLoop.stopLoop();
+    }
 }

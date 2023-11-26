@@ -1,6 +1,7 @@
 package com.mobile.g3.nguyen_quang_huy.spaceshooter;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.util.zip.Adler32;
@@ -89,6 +90,14 @@ public class GameLoop extends Thread{
                 frameCount = 0;
                 startTime = System.currentTimeMillis();
             }
+        }
+    }
+    public void stopLoop() {
+        isRunning = false;
+        try {
+            join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
