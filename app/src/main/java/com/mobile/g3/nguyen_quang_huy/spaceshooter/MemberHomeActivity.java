@@ -23,7 +23,6 @@ public class MemberHomeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         member = new Member();
         btnNewGame = (Button) findViewById(R.id.btnNewGame);
-//        btnHistory = (Button) findViewById(R.id.btnTK);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             member = (Member) intent.getSerializableExtra("member", Member.class);
         }
@@ -38,14 +37,5 @@ public class MemberHomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-//        btnHistory.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MemberHomeActivity.this, TKActivity.class);
-//                intent.putExtra("member", member);
-//                startActivity(intent);
-//            }
-//        });
     }
 }

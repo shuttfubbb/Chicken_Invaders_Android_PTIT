@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             member = (Member) intent.getSerializableExtra("member", Member.class);
         }
-        game = new Game(this, member);
+        game = new Game(this, member, 1, "easy", 1, 1);
         setContentView(game);
     }
     @Override
@@ -59,7 +59,5 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Comment out "super.onBackPressed()" to disable button
-        //super.onBackPressed();
     }
 }
