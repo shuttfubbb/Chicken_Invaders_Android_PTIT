@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
-        super(context, "btl", null, 1);
+        super(context, "btl", null, 4);
     }
 
     @Override
@@ -30,19 +30,20 @@ public class DBHelper extends SQLiteOpenHelper {
         sql = "CREATE TABLE history(id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "datetime TIMESTAMP, " +
                 "score INTEGER(10), " +
-                "idMember INTEGER(10), FOREIGN KEY(idMember) REFERENCES member(id)); ";
+                "idMember INTEGER(10), FOREIGN KEY(idMember) REFERENCES member(id));";
         sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO history VALUES(null, '2023-10-30 10:10:10.000', 10, 1)";
+        sql = "INSERT INTO history VALUES(null, '2023-10-30 10:10:10', 10, 1)";
         sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO history VALUES(null, '2023-10-30 11:11:11.000', 12, 1)";
+        sql = "INSERT INTO history VALUES(null, '2023-10-30 11:11:11', 12, 1)";
         sqLiteDatabase.execSQL(sql);
-        sql = "INSERT INTO history VALUES(null, '2023-11-01 14:14:14.000', 14, 2)";
+        sql = "INSERT INTO history VALUES(null, '2023-11-01 14:14:14', 14, 2)";
         sqLiteDatabase.execSQL(sql);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS member");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS history");
         onCreate(sqLiteDatabase);
     }
 }

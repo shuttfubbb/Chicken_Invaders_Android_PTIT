@@ -19,14 +19,10 @@ public class Bullet extends Circle{
         List<Bitmap> frames = new ArrayList<Bitmap>();
         frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.pbullet));
         this.sprite = new Sprite(frames, 1, true);
-        verlocityX = spellcaster.getDirectionX()*MAX_SPEED;
-        verlocityY = spellcaster.getDirectionY()*MAX_SPEED;
     }
 
     @Override
     public void update() {
-//        positionX += verlocityX;
-//        positionY += verlocityY;
         positionX += 0;
         positionY += -30;
     }
