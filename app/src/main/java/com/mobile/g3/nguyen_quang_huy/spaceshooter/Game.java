@@ -28,10 +28,7 @@ import java.util.List;
 * Game manages all object in the game and is reponsible for updating all states and render all objects to the screen
 * */
 public class Game extends SurfaceView implements SurfaceHolder.Callback {
-    Member member;
-    History history;
-    private int id;
-    private String name;
+    int score;
     private double speedCoeff;
     private double quantityCoeff;
     static int screenWidth, screenHeight;
@@ -53,8 +50,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private List<Explosion> explosionList = new ArrayList<Explosion>();
     private int joystickPointerId = 0;
     private int numberOfSpellToCast = 0;
+    private Level level;
 
-    public Game(Context context, Member member, int id, String name, double speedCoeff, double quantityCoeff) {
+    public Game(Context context, Level level) {
         super(context);
 
         // Get surface holder and add callback
@@ -64,14 +62,13 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameLoop = new GameLoop(this, surfaceHolder);
 
         // Init Game Objects
-        this.member = member;
-        this.history = new History();
+        this.level = level;
         joystick = new Joystick(400, 800, 160, 90);
         player = new Player(getContext(), joystick, 500, 500, 30);
-        this.speedCoeff = speedCoeff;
-        this.quantityCoeff = quantityCoeff;
-        enemyRemain = 10;
-        enemy2Remain = 5;
+        this.speedCoeff = this.level.getSpeedCoeff();
+        this.quantityCoeff = this.level.getQuantityCoeff();
+        enemyRemain = 2;
+        enemy2Remain = 1;
         enemyRemain *= quantityCoeff;
         enemy2Remain *= quantityCoeff;
         updatesUntilEnemySpawn = (int)(Math.random() * 15 + 45);
@@ -142,7 +139,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         int color = ContextCompat.getColor(this.getContext(), R.color.red);
         paint.setColor(color);
         paint.setTextSize(50);
-        canvas.drawText("Score: " + player.getScore(), 60, 60, paint);
+        canvas.drawText("Score: " + score, 60, 60, paint);
     }
     public void drawBackground(Canvas canvas){
         canvas.drawBitmap(background, 0, 0, null);
@@ -181,19 +178,19 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-        if(player.getHealth() <= 0){
-            Intent intent = new Intent(getContext(), EndGameActivity.class);
-            history.setScore(player.getScore());
-            history.setMember(this.member);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                history.setDatetime(LocalDateTime.now());
-            }
-            intent.putExtra("history", history);
-            intent.putExtra("member", member);
-            getContext().startActivity(intent);
-            Log.d("MainActivity.java", "1 finish");
+        if(player.getHealth() <= 0 || (enemy2Remain == 0 && enemy2List.size() == 0)){
+//            Intent intent = new Intent(getContext(), EndGameActivity.class);
+//            history.setScore(score);
+//            history.setMember(this.member);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                history.setDatetime(LocalDateTime.now());
+//            }
+//            intent.putExtra("history", history);
+//            intent.putExtra("member", member);
+//            getContext().startActivity(intent);
+//            Log.d("MainActivity.java", "1 finish");
             ((Activity) getContext()).finish();
-            Log.d("MainActivity.java", "2 finish");
+//            Log.d("MainActivity.java", "2 finish");
             return;
         }
         // Update game state
@@ -258,7 +255,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             }
             for(int j=0; j<bulletList.size(); ++j){
                 if(Circle.isColliding(enemyList.get(i), bulletList.get(j))){
-                    player.setScore(player.getScore() + 1);
+                    score += 1;
                     explosionList.add(new Explosion(getContext(), enemyList.get(i).getPositionX(), enemyList.get(i).getPositionY()));
                     enemyList.remove(i);
                     bulletList.remove(j);
@@ -279,7 +276,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     explosionList.add(new Explosion(getContext(), enemy2List.get(i).getPositionX(), enemy2List.get(i).getPositionY()));
                     bulletList.remove(j);
                     if(enemy2List.get(i).getHp() == 0){
-                        player.setScore(player.getScore() + enemy2List.get(i).getReward());
+                        score += enemy2List.get(i).getReward();
                         enemy2List.remove(i);
                     }
                     break;

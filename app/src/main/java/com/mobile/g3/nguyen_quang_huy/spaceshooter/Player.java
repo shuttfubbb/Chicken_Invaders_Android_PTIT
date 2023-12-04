@@ -19,7 +19,6 @@ public class Player extends Circle implements Serializable{
     private final Joystick joystick;
     private Sprite sprite;
     private int health = 3;
-    private int score = 0;
 
     public Player(Context context, Joystick joystick, double positionX, double positionY, double radius){
         super(context, ContextCompat.getColor(context, R.color.player), positionX, positionY, radius);
@@ -35,14 +34,6 @@ public class Player extends Circle implements Serializable{
 
     public void setHealth(int health) {
         this.health = health;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     public void draw(Canvas canvas){

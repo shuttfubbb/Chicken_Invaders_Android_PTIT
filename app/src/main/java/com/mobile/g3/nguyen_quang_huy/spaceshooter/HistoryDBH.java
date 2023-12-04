@@ -31,6 +31,7 @@ public class HistoryDBH extends DBHelper{
         values.put("datetime", formattedDateTime);
         values.put("score", history.getScore());
         values.put("idMember", history.getMember().getId());
+        values.put("idLevel", history.getLevel().getId());
         long row =  db.insert("history", null, values);
         return row > 0;
     }

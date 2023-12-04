@@ -10,6 +10,7 @@ public class History implements Serializable {
     private LocalDateTime datetime;
     private Integer score;
     private Member member;
+    private Level level;
 
     public History() {
         this.id = 0;
@@ -24,6 +25,14 @@ public class History implements Serializable {
         this.datetime = datetime;
         this.score = score;
         this.member = member;
+    }
+
+    public History(LocalDateTime datetime, Integer score, Member member, Level level) {
+        this.id = 0;
+        this.datetime = datetime;
+        this.score = score;
+        this.member = member;
+        this.level = level;
     }
 
     public Integer getId() {
@@ -56,5 +65,13 @@ public class History implements Serializable {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
     }
 }
