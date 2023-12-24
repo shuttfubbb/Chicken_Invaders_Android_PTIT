@@ -16,8 +16,8 @@ public class Enemy2 extends Enemy{
         frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy1));
         this.sprite = new Sprite(frames, 1, true);
         this.SPAWNS_PER_MINUTE = 10;
-        verlocityX = -10;
-        verlocityY = 0.7;
+        verlocityX = -7;
+        verlocityY = 0.6;
         this.hp = 5;
         this.reward = 5;
     }
@@ -28,8 +28,8 @@ public class Enemy2 extends Enemy{
         frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy1));
         this.sprite = new Sprite(frames, 1, true);
         this.SPAWNS_PER_MINUTE = 10;
-        verlocityX = -10;
-        verlocityY = 0.7;
+        verlocityX = -7;
+        verlocityY = 0.6;
         this.hp = 5;
         this.reward = 5;
     }
@@ -40,8 +40,8 @@ public class Enemy2 extends Enemy{
         frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy1));
         this.sprite = new Sprite(frames, 1, true);
         this.SPAWNS_PER_MINUTE = 10;
-        verlocityX = -10 * speedCoeff;
-        verlocityY = 0.7 * speedCoeff;
+        verlocityX = -7 * speedCoeff;
+        verlocityY = 0.6 * speedCoeff;
         this.hp = 5;
         this.reward = 5;
     }

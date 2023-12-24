@@ -64,7 +64,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Init Game Objects
         this.level = level;
         joystick = new Joystick(400, 800, 160, 90);
-        player = new Player(getContext(), joystick, 500, 500, 30);
+        player = new Player(getContext(), joystick, 1100, 800, 30);
         this.speedCoeff = this.level.getSpeedCoeff();
         this.quantityCoeff = this.level.getQuantityCoeff();
         enemyRemain = 2;
@@ -140,6 +140,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(color);
         paint.setTextSize(50);
         canvas.drawText("Score: " + score, 60, 60, paint);
+        canvas.drawText("Ghost remain: " + player.getRemainGhostStep(), 60, 120, paint);
     }
     public void drawBackground(Canvas canvas){
         canvas.drawBitmap(background, 0, 0, null);
@@ -179,18 +180,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         if(player.getHealth() <= 0 || (enemy2Remain == 0 && enemy2List.size() == 0)){
-//            Intent intent = new Intent(getContext(), EndGameActivity.class);
-//            history.setScore(score);
-//            history.setMember(this.member);
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                history.setDatetime(LocalDateTime.now());
-//            }
-//            intent.putExtra("history", history);
-//            intent.putExtra("member", member);
-//            getContext().startActivity(intent);
-//            Log.d("MainActivity.java", "1 finish");
             ((Activity) getContext()).finish();
-//            Log.d("MainActivity.java", "2 finish");
             return;
         }
         // Update game state
@@ -198,28 +188,6 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player.update();
         for(Bullet bullet : bulletList){
             bullet.update();
-        }
-        for(Enemy enemy : enemyList){
-            if(enemy.getPositionX() >= screenWidth - enemy.getRadius() - 20){
-                double vX = enemy.getVerlocityX();
-                enemy.setVerlocityX(vX * -1);
-            }
-            if(enemy.getPositionX() <= enemy.getRadius() + 20){
-                double vX = enemy.getVerlocityX();
-                enemy.setVerlocityX(vX * -1);
-            }
-            enemy.update();
-        }
-        for(Enemy2 enemy : enemy2List){
-            if(enemy.getPositionX() >= screenWidth - enemy.getRadius() - 20){
-                double vX = enemy.getVerlocityX();
-                enemy.setVerlocityX(vX * -1);
-            }
-            if(enemy.getPositionX() <= enemy.getRadius() + 20){
-                double vX = enemy.getVerlocityX();
-                enemy.setVerlocityX(vX * -1);
-            }
-            enemy.update();
         }
         // Quan ly khoi tao enemy va bullet
         if(enemyRemain > 0 ){
@@ -243,12 +211,24 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         }
         // Kiem tra va cham, phat no
         for(int i=0; i<enemyList.size(); ++i){
+            if(enemyList.get(i).getPositionX() >= screenWidth - enemyList.get(i).getRadius() - 20){
+                double vX = enemyList.get(i).getVerlocityX();
+                enemyList.get(i).setVerlocityX(vX * -1);
+            }
+            if(enemyList.get(i).getPositionX() <= enemyList.get(i).getRadius() + 20){
+                double vX = enemyList.get(i).getVerlocityX();
+                enemyList.get(i).setVerlocityX(vX * -1);
+            }
+            enemyList.get(i).update();
             if(enemyList.get(i).getPositionY() > screenHeight + 100){
                 enemyList.remove(i);
                 continue;
             }
-            if(Circle.isColliding(enemyList.get(i), player)){
+            if(Circle.isColliding(enemyList.get(i), player) && player.getRemainGhostStep() == 0){
                 player.setHealth(Math.max(0, player.getHealth() - 1));
+                player.setPositionX(1100);
+                player.setPositionY(800);
+                player.setRemainGhostStep(60);
                 explosionList.add(new Explosion(getContext(), enemyList.get(i).getPositionX(), enemyList.get(i).getPositionY()));
                 enemyList.remove(i);
                 continue;
@@ -264,8 +244,20 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
         for(int i=0; i<enemy2List.size(); ++i){
-            if(Circle.isColliding(enemy2List.get(i), player)){
+            if(enemy2List.get(i).getPositionX() >= screenWidth - enemy2List.get(i).getRadius() - 20){
+                double vX = enemy2List.get(i).getVerlocityX();
+                enemy2List.get(i).setVerlocityX(vX * -1);
+            }
+            if(enemy2List.get(i).getPositionX() <= enemy2List.get(i).getRadius() + 20){
+                double vX = enemy2List.get(i).getVerlocityX();
+                enemy2List.get(i).setVerlocityX(vX * -1);
+            }
+            enemy2List.get(i).update();
+            if(Circle.isColliding(enemy2List.get(i), player) && player.getRemainGhostStep() == 0){
                 player.setHealth(Math.max(0, player.getHealth() - 1));
+                player.setPositionX(1100);
+                player.setPositionY(800);
+                player.setRemainGhostStep(60);
                 explosionList.add(new Explosion(getContext(), enemy2List.get(i).getPositionX(), enemy2List.get(i).getPositionY()));
                 enemy2List.remove(i);
                 continue;

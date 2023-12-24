@@ -18,24 +18,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-//    private Game game;
-//    Member member;
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        // Set window to fullscreen
-//        Window window = getWindow();
-//        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        Intent intent = getIntent();
-//        member = new Member();
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-//            member = (Member) intent.getSerializableExtra("member", Member.class);
-//        }
-//        selectedGame = new Game(this, member, 1, "easy", 1, 1);
-//        setContentView(selectedGame);
-//    }
-
     Button btnPlay;
     LevelDBH levelDBH;
     ArrayList<Level> levels;

@@ -32,7 +32,7 @@ public class Sprite {
         this.frames = frames;
     }
     public void draw(Canvas canvas, Circle obj) {
-        if(cnt_frame == frames.size()){
+        if(cnt_frame >= frames.size()){
             if(isLoop){
                 cnt_frame = 0;
             }

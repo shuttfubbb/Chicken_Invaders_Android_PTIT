@@ -19,13 +19,19 @@ public class Player extends Circle implements Serializable{
     private final Joystick joystick;
     private Sprite sprite;
     private int health = 3;
+    private int remainGhostStep = 0;
+    private List<Bitmap> frames1 = new ArrayList<Bitmap>();
+    private List<Bitmap> frames2 = new ArrayList<Bitmap>();
 
     public Player(Context context, Joystick joystick, double positionX, double positionY, double radius){
         super(context, ContextCompat.getColor(context, R.color.player), positionX, positionY, radius);
         this.joystick = joystick;
-        List<Bitmap> frames = new ArrayList<Bitmap>();
-        frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.player0));
-        this.sprite = new Sprite(frames, 1, true);
+        Bitmap player0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.player0);
+        Bitmap player1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.player1);
+        frames1.add(player0);
+        frames2.add(player0);
+        frames2.add(player1);
+        this.sprite = new Sprite(frames1, 10, true);
     }
 
     public int getHealth() {
@@ -36,9 +42,18 @@ public class Player extends Circle implements Serializable{
         this.health = health;
     }
 
+    public int getRemainGhostStep() {
+        return remainGhostStep;
+    }
+
+    public void setRemainGhostStep(int remainGhostStep) {
+        this.remainGhostStep = remainGhostStep;
+    }
+
     public void draw(Canvas canvas){
         sprite.draw(canvas, this);
     }
+
 
     public void update() {
         // Cap nhat van toc dua vao joystick
@@ -53,6 +68,13 @@ public class Player extends Circle implements Serializable{
             double distance = Utils.getDistanceBetweenPoints(0, 0, verlocityX, verlocityY);
             directionX = verlocityX/distance;
             directionY = verlocityY/distance;
+        }
+        // Cap nhat thoi gian tang hinh
+        remainGhostStep = Math.max(0, remainGhostStep - 1);
+        if(remainGhostStep != 0){
+            sprite.setFrames(frames2);
+        }else{
+            sprite.setFrames(frames1);
         }
     }
 }
