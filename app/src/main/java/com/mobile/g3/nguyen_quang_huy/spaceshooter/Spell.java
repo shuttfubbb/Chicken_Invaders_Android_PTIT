@@ -40,8 +40,6 @@ public class Spell extends Circle{
     public void update() {
         positionX += verlocityX;
         positionY -= verlocityY;
-//        positionX += 0;
-//        positionY += -30;
     }
     public void draw(Canvas canvas){
         sprite.draw(canvas, this);

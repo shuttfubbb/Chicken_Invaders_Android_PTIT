@@ -16,7 +16,7 @@ public class Enemy extends Circle{
     protected static double SPAWNS_PER_SECOND = SPAWNS_PER_MINUTE/60.0;
     protected static double UPDATES_PER_SPAWN = GameLoop.MAX_UPS/SPAWNS_PER_SECOND;
     protected static double updatesUntilNextSpawn = UPDATES_PER_SPAWN;
-    private final Player player;
+    protected final Player player;
     protected Sprite sprite;
     protected int hp = 1;
     protected int reward = 1;

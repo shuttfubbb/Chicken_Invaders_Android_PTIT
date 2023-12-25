@@ -30,13 +30,17 @@ public abstract class GameObject {
     public double getDirectionY() {
         return directionY;
     }
-
     public double getVerlocityX() {
         return verlocityX;
     }
-
     public void setVerlocityX(double verlocityX) {
         this.verlocityX = verlocityX;
+    }
+    public double getVerlocityY() {
+        return verlocityY;
+    }
+    public void setVerlocityY(double verlocityY) {
+        this.verlocityY = verlocityY;
     }
 
     public void setPositionX(double positionX) {

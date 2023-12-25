@@ -41,12 +41,16 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private GameLoop gameLoop;
     private List<Enemy> enemyList = new ArrayList<Enemy>();
     private List<Enemy2> enemy2List = new ArrayList<Enemy2>();
+    private List<Enemy3> enemy3List = new ArrayList<Enemy3>();
     private double enemyRemain;
     private double enemy2Remain;
+    private double enemy3Remain;
     private int updatesUntilEnemySpawn;
     private int updatesUntilEnemy2Spawn;
+    private int updatesUntilEnemy3Spawn;
     private List<Spell> spellList = new ArrayList<Spell>();
     private List<Bullet> bulletList = new ArrayList<Bullet>();
+    private List<EBullet> eBulletList = new ArrayList<EBullet>();
     private List<Explosion> explosionList = new ArrayList<Explosion>();
     private int joystickPointerId = 0;
     private int numberOfSpellToCast = 0;
@@ -69,10 +73,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         this.quantityCoeff = this.level.getQuantityCoeff();
         enemyRemain = 2;
         enemy2Remain = 1;
+        enemy3Remain = 1;
         enemyRemain *= quantityCoeff;
         enemy2Remain *= quantityCoeff;
         updatesUntilEnemySpawn = (int)(Math.random() * 15 + 45);
         updatesUntilEnemy2Spawn = (int)(Math.random() * 15 + 45);
+        updatesUntilEnemy3Spawn = (int)(Math.random() * 15 + 80);
         setFocusable(true);
 
         // Display
@@ -140,7 +146,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(color);
         paint.setTextSize(50);
         canvas.drawText("Score: " + score, 60, 60, paint);
-        canvas.drawText("Ghost remain: " + player.getRemainGhostStep(), 60, 120, paint);
+        if(enemy3List.size() > 0) {
+            canvas.drawText("( " + enemy3List.get(0).getPositionX() + ";" + enemy3List.get(0).getPositionY() + " )", 60, 120, paint);
+        }
     }
     public void drawBackground(Canvas canvas){
         canvas.drawBitmap(background, 0, 0, null);
@@ -162,24 +170,30 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawBackground(canvas);
         drawScore(canvas);
         drawHeath(canvas);
-        for(Explosion explosion : explosionList){
-            explosion.draw(canvas);
-        }
-        player.draw(canvas);
         for(Enemy enemy : enemyList){
             enemy.draw(canvas);
         }
         for(Enemy2 enemy : enemy2List){
             enemy.draw(canvas);
         }
+        for(Enemy3 enemy : enemy3List){
+            enemy.draw(canvas);
+        }
+        for(Explosion explosion : explosionList){
+            explosion.draw(canvas);
+        }
         for(Bullet bullet : bulletList){
+            bullet.draw(canvas);
+        }
+        player.draw(canvas);
+        for(EBullet bullet : eBulletList){
             bullet.draw(canvas);
         }
         joystick.draw(canvas);
     }
 
     public void update() {
-        if(player.getHealth() <= 0 || (enemy2Remain == 0 && enemy2List.size() == 0)){
+        if(player.getHealth() <= 0 || (enemy3Remain == 0 && enemy3List.size() == 0)){
             ((Activity) getContext()).finish();
             return;
         }
@@ -204,9 +218,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 updatesUntilEnemy2Spawn = (int)(Math.random() * 15 + 45);
                 enemy2Remain -= 1;
             }
+        }else if (enemy3Remain > 0 && enemyList.size() == 0 && enemy2List.size() == 0) {
+            updatesUntilEnemy3Spawn -= 1;
+            if(updatesUntilEnemy3Spawn == 0){
+                enemy3List.add(new Enemy3(getContext(), player, 90, speedCoeff));
+                enemy3Remain -= 1;
+            }
         }
         while(numberOfSpellToCast > 0){
-            bulletList.add(new Bullet(getContext(), player));
+            if(player.getRemainSkillStep() == 0){
+                bulletList.add(new Bullet(getContext(), player.getPositionX(), player.getPositionY(), 30, 0));
+            }
+            else{
+                bulletList.add(new Bullet(getContext(), player.getPositionX(), player.getPositionY(), 30, 0));
+                bulletList.add(new Bullet(getContext(), player.getPositionX(), player.getPositionY(), 30, -15));
+                bulletList.add(new Bullet(getContext(), player.getPositionX(), player.getPositionY(), 30, 15));
+            }
             numberOfSpellToCast--;
         }
         // Kiem tra va cham, phat no
@@ -243,6 +270,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
+        // Enemy 2
         for(int i=0; i<enemy2List.size(); ++i){
             if(enemy2List.get(i).getPositionX() >= screenWidth - enemy2List.get(i).getRadius() - 20){
                 double vX = enemy2List.get(i).getVerlocityX();
@@ -259,7 +287,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 player.setPositionY(800);
                 player.setRemainGhostStep(60);
                 explosionList.add(new Explosion(getContext(), enemy2List.get(i).getPositionX(), enemy2List.get(i).getPositionY()));
-                enemy2List.remove(i);
+                enemy2List.get(i).setHp(enemy2List.get(i).getHp() - 1);
+                if(enemy2List.get(i).getHp() <= 0){
+                    enemy2List.remove(i);
+                }
                 continue;
             }
             for(int j=0; j<bulletList.size(); ++j){
@@ -275,6 +306,65 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
+        // Enemy 3
+        for(int i=0; i<enemy3List.size(); ++i){
+            if(enemy3List.get(i).getChangeStatetimeRemain() == 0){
+                if(enemy3List.get(i).getState() == 0){
+
+                }
+                else{
+                    for(int z = 0; z < 12; ++z){
+                        eBulletList.add(new EBullet(getContext(), enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY(), 20, z*(360/12)));
+                    }
+                }
+            }
+            if(enemy3List.get(i).getPositionX() >= screenWidth - enemy3List.get(i).getRadius() - 20 || enemy3List.get(i).getPositionX() <= enemy3List.get(i).getRadius() + 20){
+                double vX = enemy3List.get(i).getVerlocityX();
+                enemy3List.get(i).setVerlocityX(vX * -1);
+            }
+            if(enemy3List.get(i).getPositionY() >= screenHeight - enemy3List.get(i).getRadius() - 20 || enemy3List.get(i).getPositionY() <= 10){
+                double vY = enemy3List.get(i).getVerlocityY();
+                enemy3List.get(i).setVerlocityY(vY * -1);
+            }
+            enemy3List.get(i).update();
+            if(Circle.isColliding(enemy3List.get(i), player) && player.getRemainGhostStep() == 0){
+                player.setHealth(Math.max(0, player.getHealth() - 1));
+                player.setPositionX(1100);
+                player.setPositionY(800);
+                player.setRemainGhostStep(60);
+                explosionList.add(new Explosion(getContext(), enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY()));
+                enemy3List.get(i).setHp(enemy3List.get(i).getHp() - 1);
+                if(enemy3List.get(i).getHp() <= 0){
+                    enemy3List.remove(i);
+                }
+                continue;
+            }
+            for(int j=0; j<bulletList.size(); ++j){
+                if(Circle.isColliding(enemy3List.get(i), bulletList.get(j))){
+                    enemy3List.get(i).setHp(enemy3List.get(i).getHp() - 1);
+                    explosionList.add(new Explosion(getContext(), enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY()));
+                    bulletList.remove(j);
+                    if(enemy3List.get(i).getHp() == 0){
+                        score += enemy3List.get(i).getReward();
+                        enemy3List.remove(i);
+                    }
+                    break;
+                }
+            }
+        }
+
+        for(int i=0; i<eBulletList.size(); ++i){
+            eBulletList.get(i).update();
+            if(Circle.isColliding(eBulletList.get(i), player) && player.getRemainGhostStep() == 0){
+                player.setHealth(Math.max(0, player.getHealth() - 1));
+                player.setPositionX(1100);
+                player.setPositionY(800);
+                player.setRemainGhostStep(60);
+                explosionList.add(new Explosion(getContext(), eBulletList.get(i).getPositionX(), eBulletList.get(i).getPositionY()));
+                eBulletList.remove(i);
+            }
+        }
+
         for(int i=0; i<explosionList.size(); ++i){
             if(explosionList.get(i).sprite.isEndLoop()){
                 explosionList.remove(i);

@@ -20,6 +20,7 @@ public class Player extends Circle implements Serializable{
     private Sprite sprite;
     private int health = 3;
     private int remainGhostStep = 0;
+    private int remainSkillStep = 0;
     private List<Bitmap> frames1 = new ArrayList<Bitmap>();
     private List<Bitmap> frames2 = new ArrayList<Bitmap>();
 
@@ -50,6 +51,14 @@ public class Player extends Circle implements Serializable{
         this.remainGhostStep = remainGhostStep;
     }
 
+    public int getRemainSkillStep() {
+        return remainSkillStep;
+    }
+
+    public void setRemainSkillStep(int remainSkillStep) {
+        this.remainSkillStep = remainSkillStep;
+    }
+
     public void draw(Canvas canvas){
         sprite.draw(canvas, this);
     }
@@ -69,6 +78,8 @@ public class Player extends Circle implements Serializable{
             directionX = verlocityX/distance;
             directionY = verlocityY/distance;
         }
+        // Cap nhat thoi gian dung skill
+        remainSkillStep = Math.max(0, remainSkillStep - 1);
         // Cap nhat thoi gian tang hinh
         remainGhostStep = Math.max(0, remainGhostStep - 1);
         if(remainGhostStep != 0){
