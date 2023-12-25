@@ -10,9 +10,9 @@ import java.util.List;
 
 public class EBullet extends Bullet{
 
-    public EBullet(Context context, double positionX, double positionY, double MAX_SPEED, int direction) {
+    public EBullet(Context context, double positionX, double positionY, double radius,double MAX_SPEED, int direction) {
         super(context, positionX, positionY, MAX_SPEED, direction);
-        this.radius = 25;
+        this.radius = radius;
         List<Bitmap> frames = new ArrayList<Bitmap>();
         Bitmap originalBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ebullet);
         Matrix matrix = new Matrix();

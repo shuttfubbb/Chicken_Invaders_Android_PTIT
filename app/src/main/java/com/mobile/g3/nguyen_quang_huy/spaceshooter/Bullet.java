@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Bullet extends Circle{
     public static final double SPEED_PIXELS_PER_SECOND = 1000;
-    public static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
+    public static double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     protected double direction;
     protected Sprite sprite;
     public Bullet(Context context, Player spellcaster) {
@@ -39,6 +39,16 @@ public class Bullet extends Circle{
         double cosR = Math.cos(radians);
         verlocityX = sinR * MAX_SPEED;
         verlocityY = cosR * MAX_SPEED;
+    }
+
+    public Bullet(Context context, double positionX, double positionY, double radius, double MAX_SPEED) {
+        super(context , ContextCompat.getColor(context, R.color.spell), positionX, positionY, radius);
+        List<Bitmap> frames = new ArrayList<Bitmap>();
+        frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.pbullet));
+        this.sprite = new Sprite(frames, 1, true);
+        this.MAX_SPEED = MAX_SPEED;
+        verlocityX = 0;
+        verlocityY = MAX_SPEED;
     }
 
     @Override

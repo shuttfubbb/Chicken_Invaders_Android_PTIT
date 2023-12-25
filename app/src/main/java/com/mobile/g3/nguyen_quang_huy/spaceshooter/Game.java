@@ -51,6 +51,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private List<Spell> spellList = new ArrayList<Spell>();
     private List<Bullet> bulletList = new ArrayList<Bullet>();
     private List<EBullet> eBulletList = new ArrayList<EBullet>();
+    private List<ERocket> eRocketList = new ArrayList<ERocket>();
     private List<Explosion> explosionList = new ArrayList<Explosion>();
     private int joystickPointerId = 0;
     private int numberOfSpellToCast = 0;
@@ -189,6 +190,9 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         for(EBullet bullet : eBulletList){
             bullet.draw(canvas);
         }
+        for(ERocket eRocket : eRocketList){
+            eRocket.draw(canvas);
+        }
         joystick.draw(canvas);
     }
 
@@ -310,11 +314,11 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         for(int i=0; i<enemy3List.size(); ++i){
             if(enemy3List.get(i).getChangeStatetimeRemain() == 0){
                 if(enemy3List.get(i).getState() == 0){
-
+                    eRocketList.add(new ERocket(getContext(), player, enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY(), 45, 15));
                 }
                 else{
                     for(int z = 0; z < 12; ++z){
-                        eBulletList.add(new EBullet(getContext(), enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY(), 20, z*(360/12)));
+                        eBulletList.add(new EBullet(getContext(), enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY(),25,20, z*(360/12)));
                     }
                 }
             }
@@ -362,6 +366,23 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 player.setRemainGhostStep(60);
                 explosionList.add(new Explosion(getContext(), eBulletList.get(i).getPositionX(), eBulletList.get(i).getPositionY()));
                 eBulletList.remove(i);
+            }
+        }
+
+        for(int i=0; i<eRocketList.size(); ++i){
+            eRocketList.get(i).update();
+            if(Circle.isColliding(eRocketList.get(i), player) && player.getRemainGhostStep() == 0){
+                player.setHealth(Math.max(0, player.getHealth() - 1));
+                player.setPositionX(1100);
+                player.setPositionY(800);
+                player.setRemainGhostStep(60);
+                explosionList.add(new Explosion(getContext(), eRocketList.get(i).getPositionX(), eRocketList.get(i).getPositionY()));
+                eRocketList.remove(i);
+                continue;
+            }
+            if(eRocketList.get(i).getEffDurationRemain() <= 0){
+                explosionList.add(new Explosion(getContext(), eRocketList.get(i).getPositionX(), eRocketList.get(i).getPositionY()));
+                eRocketList.remove(i);
             }
         }
 
