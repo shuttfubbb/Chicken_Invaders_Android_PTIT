@@ -16,7 +16,7 @@ public class Enemy3 extends Enemy{
         List<Bitmap> frames = new ArrayList<Bitmap>();
         frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy2));
         this.sprite = new Sprite(frames, 1, true);
-        this.SPAWNS_PER_MINUTE = 10;
+        //this.SPAWNS_PER_MINUTE = 10;
         verlocityX = 8;
         verlocityY = 2;
         this.hp = 15;
@@ -28,7 +28,7 @@ public class Enemy3 extends Enemy{
         List<Bitmap> frames = new ArrayList<Bitmap>();
         frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy2));
         this.sprite = new Sprite(frames, 1, true);
-        this.SPAWNS_PER_MINUTE = 10;
+        //this.SPAWNS_PER_MINUTE = 10;
         verlocityX = 8;
         verlocityY = 2;
         this.hp = 15;
@@ -41,7 +41,7 @@ public class Enemy3 extends Enemy{
         List<Bitmap> frames = new ArrayList<Bitmap>();
         frames.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy2));
         this.sprite = new Sprite(frames, 1, true);
-        this.SPAWNS_PER_MINUTE = 10;
+        //this.SPAWNS_PER_MINUTE = 10;
         verlocityX = 8 * speedCoeff;
         verlocityY = 2 * speedCoeff;
         this.hp = 15;

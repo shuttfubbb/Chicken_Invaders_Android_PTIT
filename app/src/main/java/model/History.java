@@ -1,4 +1,4 @@
-package com.mobile.g3.nguyen_quang_huy.spaceshooter;
+package model;
 
 import android.os.Build;
 
@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class History implements Serializable {
+    final static long serialVersionUID = 11L;
     private Integer id;
     private LocalDateTime datetime;
     private Integer score;

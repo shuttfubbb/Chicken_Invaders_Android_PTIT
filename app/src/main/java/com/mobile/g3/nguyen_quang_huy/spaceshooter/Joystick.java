@@ -34,10 +34,12 @@ public class Joystick {
         // Set mau cho vien ngoai va cho nut ben trong
         outerCirclePaint = new Paint();
         outerCirclePaint.setColor(Color.GRAY);
+        outerCirclePaint.setAlpha(100);
         outerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         innerCirclePaint = new Paint();
         innerCirclePaint.setColor(Color.LTGRAY);
+        innerCirclePaint.setAlpha(100);
         innerCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
@@ -49,6 +51,7 @@ public class Joystick {
                 outerCircleRadius,
                 outerCirclePaint
         );
+
 
         // Ve nut tron ben trong
         canvas.drawCircle(

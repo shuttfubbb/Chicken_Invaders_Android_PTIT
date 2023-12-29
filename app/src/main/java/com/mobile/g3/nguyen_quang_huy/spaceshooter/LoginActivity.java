@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -11,11 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import model.Member;
+
 public class LoginActivity extends AppCompatActivity {
     EditText inpUsername;
     EditText inpPassword;
     Button btnLogin;
     MemberDBH memberDBH;
+    TCPClient tcpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         inpPassword = (EditText) findViewById(R.id.inpPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         memberDBH = new MemberDBH(LoginActivity.this);
+
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

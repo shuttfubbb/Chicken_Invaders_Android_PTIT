@@ -1,8 +1,11 @@
-package com.mobile.g3.nguyen_quang_huy.spaceshooter;
+package model;
+
+import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 
 public class Level implements Serializable {
+    final static long serialVersionUID = 13L;
     private int id;
     private String name;
     private double speedCoeff;
@@ -53,8 +56,9 @@ public class Level implements Serializable {
     public void setQuantityCoeff(double quantityCoeff) {
         this.quantityCoeff = quantityCoeff;
     }
+
     @Override
     public String toString() {
-        return this.name;
+        return this.getName();
     }
 }

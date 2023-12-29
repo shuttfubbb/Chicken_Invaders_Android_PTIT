@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
+import model.Level;
+
 public class LevelDBH extends DBHelper{
     public LevelDBH(Context context) {
         super(context);

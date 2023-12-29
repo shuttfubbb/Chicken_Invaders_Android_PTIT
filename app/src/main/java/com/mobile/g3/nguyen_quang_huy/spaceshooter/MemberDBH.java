@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import model.Member;
+
 public class MemberDBH extends DBHelper{
 
     private static final String TABLE_NAME = "member";

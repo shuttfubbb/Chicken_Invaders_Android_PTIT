@@ -11,12 +11,16 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import model.History;
+import model.Member;
+
 public class EndGameActivity extends AppCompatActivity {
     TextView txtScore;
     Button btnBack;
     History history;
     Member member;
     HistoryDBH historyDBH;
+    TCPClient tcpClient = new TCPClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +44,15 @@ public class EndGameActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(historyDBH.add(history)){
-                    Intent intent = new Intent(EndGameActivity.this, MemberHomeActivity.class);
-                    intent.putExtra("member", member);
-                    startActivity(intent);
-                }
+//                try {
+                    if(historyDBH.add(history)){
+                        Intent intent = new Intent(EndGameActivity.this, MemberHomeActivity.class);
+                        intent.putExtra("member", member);
+                        startActivity(intent);
+                    }
+//                } catch (ClassNotFoundException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
     }

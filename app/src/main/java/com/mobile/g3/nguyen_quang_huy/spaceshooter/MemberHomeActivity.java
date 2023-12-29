@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import model.Member;
+
 public class MemberHomeActivity extends AppCompatActivity {
     Member member;
     Button btnNewGame;

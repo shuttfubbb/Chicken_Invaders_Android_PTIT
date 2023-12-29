@@ -1,9 +1,10 @@
-package com.mobile.g3.nguyen_quang_huy.spaceshooter;
+package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Member implements Serializable {
+    final static long serialVersionUID = 12L;
     private Integer id;
     private String name;
     private String username;

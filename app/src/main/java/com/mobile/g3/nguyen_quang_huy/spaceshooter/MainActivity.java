@@ -17,6 +17,10 @@ import android.widget.Spinner;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import model.History;
+import model.Level;
+import model.Member;
+
 public class MainActivity extends AppCompatActivity {
     Button btnPlay;
     LevelDBH levelDBH;
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinner;
     Member member;
     History history;
+    TCPClient tcpClient = new TCPClient();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +46,11 @@ public class MainActivity extends AppCompatActivity {
             member = (Member) intent.getSerializableExtra("member", Member.class);
         }
         levelDBH = new LevelDBH(this);
-        levels = levelDBH.getAllLevel();
+//        try {
+            levels = levelDBH.getAllLevel();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
         ArrayAdapter<Level> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, levels);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);

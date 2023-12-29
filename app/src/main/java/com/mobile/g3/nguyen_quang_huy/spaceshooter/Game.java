@@ -2,14 +2,11 @@ package com.mobile.g3.nguyen_quang_huy.spaceshooter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.os.Build;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -17,11 +14,10 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import model.Level;
 
 
 /*
@@ -45,6 +41,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private double enemyRemain;
     private double enemy2Remain;
     private double enemy3Remain;
+    private int starRemain;
     private int updatesUntilEnemySpawn;
     private int updatesUntilEnemy2Spawn;
     private int updatesUntilEnemy3Spawn;
@@ -53,6 +50,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
     private List<EBullet> eBulletList = new ArrayList<EBullet>();
     private List<ERocket> eRocketList = new ArrayList<ERocket>();
     private List<Explosion> explosionList = new ArrayList<Explosion>();
+    private List<Star> starList = new ArrayList<Star>();
+    private List<Cherry> cherryList = new ArrayList<Cherry>();
     private int joystickPointerId = 0;
     private int numberOfSpellToCast = 0;
     private Level level;
@@ -72,9 +71,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player = new Player(getContext(), joystick, 1100, 800, 30);
         this.speedCoeff = this.level.getSpeedCoeff();
         this.quantityCoeff = this.level.getQuantityCoeff();
-        enemyRemain = 2;
-        enemy2Remain = 1;
+        enemyRemain = 10;
+        enemy2Remain = 4;
         enemy3Remain = 1;
+        starRemain = 1;
         enemyRemain *= quantityCoeff;
         enemy2Remain *= quantityCoeff;
         updatesUntilEnemySpawn = (int)(Math.random() * 15 + 45);
@@ -147,8 +147,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(color);
         paint.setTextSize(50);
         canvas.drawText("Score: " + score, 60, 60, paint);
-        if(enemy3List.size() > 0) {
-            canvas.drawText("( " + enemy3List.get(0).getPositionX() + ";" + enemy3List.get(0).getPositionY() + " )", 60, 120, paint);
+        if(player.getRemainSkillStep() > 0) {
+            canvas.drawText("Time remain: " + (int)player.getRemainSkillStep() / 30 + " s", 60, 120, paint);
         }
     }
     public void drawBackground(Canvas canvas){
@@ -171,6 +171,12 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         drawBackground(canvas);
         drawScore(canvas);
         drawHeath(canvas);
+        for(Star star : starList){
+            star.draw(canvas);
+        }
+        for(Cherry cherry : cherryList){
+            cherry.draw(canvas);
+        }
         for(Enemy enemy : enemyList){
             enemy.draw(canvas);
         }
@@ -227,6 +233,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
             if(updatesUntilEnemy3Spawn == 0){
                 enemy3List.add(new Enemy3(getContext(), player, 90, speedCoeff));
                 enemy3Remain -= 1;
+            }
+            if(enemy3Remain == 0 && starRemain > 0){
+                starList.add(new Star(getContext(), Math.random()*900 + 100, 0, 30));
+                starRemain -= 1;
             }
         }
         while(numberOfSpellToCast > 0){
@@ -304,6 +314,10 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     bulletList.remove(j);
                     if(enemy2List.get(i).getHp() == 0){
                         score += enemy2List.get(i).getReward();
+                        double rand = Math.random();
+                        if(rand < 0.3){
+                            cherryList.add(new Cherry(getContext(), enemy2List.get(i).getPositionX(), enemy2List.get(i).getPositionY(), 20));
+                        }
                         enemy2List.remove(i);
                     }
                     break;
@@ -317,8 +331,8 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                     eRocketList.add(new ERocket(getContext(), player, enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY(), 45, 15));
                 }
                 else{
-                    for(int z = 0; z < 12; ++z){
-                        eBulletList.add(new EBullet(getContext(), enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY(),25,20, z*(360/12)));
+                    for(int z = 0; z < 24; ++z){
+                        eBulletList.add(new EBullet(getContext(), enemy3List.get(i).getPositionX(), enemy3List.get(i).getPositionY(),25,15, z*(360/24)));
                     }
                 }
             }
@@ -366,6 +380,22 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
                 player.setRemainGhostStep(60);
                 explosionList.add(new Explosion(getContext(), eBulletList.get(i).getPositionX(), eBulletList.get(i).getPositionY()));
                 eBulletList.remove(i);
+            }
+        }
+
+        for(int i=0; i<starList.size(); ++i){
+            starList.get(i).update();
+            if(Circle.isColliding(starList.get(i), player)){
+                player.setRemainSkillStep(300);
+                starList.remove(i);
+            }
+        }
+
+        for(int i=0; i<cherryList.size(); ++i){
+            cherryList.get(i).update();
+            if(Circle.isColliding(cherryList.get(i), player)){
+                player.setHealth(Math.min(3, player.getHealth() + 1));
+                cherryList.remove(i);
             }
         }
 

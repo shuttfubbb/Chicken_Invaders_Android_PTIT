@@ -2,14 +2,12 @@ package com.mobile.g3.nguyen_quang_huy.spaceshooter;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+
+import model.History;
 
 public class HistoryDBH extends DBHelper{
     public HistoryDBH(Context context) {
