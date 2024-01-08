@@ -71,7 +71,7 @@ public class Game extends SurfaceView implements SurfaceHolder.Callback {
         player = new Player(getContext(), joystick, 1100, 800, 30);
         this.speedCoeff = this.level.getSpeedCoeff();
         this.quantityCoeff = this.level.getQuantityCoeff();
-        enemyRemain = 10;
+        enemyRemain = 7;
         enemy2Remain = 4;
         enemy3Remain = 1;
         starRemain = 1;
